@@ -1,12 +1,12 @@
 import app from "./server/app.js";
-import { pool } from "./config/db.js";
+import { prisma } from "./config/prisma.js";
 
 const PORT = process.env.PORT || 3000;
 
 async function start() {
   try {
-    await pool.query("SELECT NOW()");
-    console.log("Connected to PostgreSQL");
+    await prisma.$connect();
+    console.log("Connected to PostgreSQL via Prisma");
 
     app.listen(PORT, () => {
       console.log(`Server running on port ${PORT}`);

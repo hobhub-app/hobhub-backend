@@ -1,0 +1,99 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+//
+// USERS
+//
+model User {
+  user_id             Int      @id @default(autoincrement())
+  google_id           String?  @unique
+  email               String   @unique
+  firstname           String?
+  lastname            String?
+  age                 Int?
+  gender              String?
+  location            String?
+  profile_image_url   String?
+  profile_description String?
+  created_at          DateTime @default(now())
+
+  hobbies             UserHobby[]
+  saved_users         SavedUser[] @relation("SavedUsers")
+  saved_by_users      SavedUser[] @relation("UsersSavedBy")
+
+  sent_messages       ConversationMessage[] @relation("MessageSender")
+  conversations_as_user1 Conversation[]      @relation("User1")
+  conversations_as_user2 Conversation[]      @relation("User2")
+}
+
+//
+// HOBBIES
+//
+model Hobby {
+  hobby_id   Int         @id @default(autoincrement())
+  hobby_name String
+
+  users      UserHobby[]
+}
+
+//
+// USER_HOBBIES (join table)
+//
+model UserHobby {
+  id          Int    @id @default(autoincrement())
+  user_id     Int
+  hobby_id    Int
+  skill_level String?
+
+  user        User   @relation(fields: [user_id], references: [user_id])
+  hobby       Hobby  @relation(fields: [hobby_id], references: [hobby_id])
+}
+
+//
+// SAVED USERS
+//
+model SavedUser {
+  id             Int      @id @default(autoincrement())
+  user_id        Int
+  saved_user_id  Int
+  created_at     DateTime @default(now())
+
+  user           User @relation("SavedUsers", fields: [user_id], references: [user_id])
+  saved_user     User @relation("UsersSavedBy", fields: [saved_user_id], references: [user_id])
+}
+
+//
+// CONVERSATIONS (2 users only)
+//
+model Conversation {
+  conversation_id Int      @id @default(autoincrement())
+  user1_id        Int
+  user2_id        Int
+  created_at      DateTime @default(now())
+  last_message_at DateTime?
+
+  user1           User @relation("User1", fields: [user1_id], references: [user_id])
+  user2           User @relation("User2", fields: [user2_id], references: [user_id])
+
+  messages        ConversationMessage[]
+}
+
+//
+// MESSAGES
+//
+model ConversationMessage {
+  message_id      Int      @id @default(autoincrement())
+  conversation_id Int
+  sender_id       Int
+  content         String
+  created_at      DateTime @default(now())
+  read_at         DateTime?
+
+  conversation    Conversation @relation(fields: [conversation_id], references: [conversation_id])
+  sender          User         @relation("MessageSender", fields: [sender_id], references: [user_id])
+}
