@@ -1,8 +1,6 @@
 import "dotenv/config";
-import pkg from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
-
-const { PrismaClient } = pkg;
+import { PrismaClient } from "../generated/prisma/index.js";
 
 // Create adapter with connection string
 const adapter = new PrismaPg({
