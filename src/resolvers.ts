@@ -26,7 +26,7 @@ export const resolvers = {
     },
 
     // Get single user by ID
-    user: async (_: any, args: UserArgs) => {
+    user: async (_: unknown, args: UserArgs) => {
       return await prisma.user.findUnique({
         where: { user_id: args.id },
       });
@@ -40,14 +40,14 @@ export const resolvers = {
 
   Mutation: {
     // Create a new user
-    createUser: async (_: any, args: CreateUserArgs) => {
+    createUser: async (_: unknown, args: CreateUserArgs) => {
       return await prisma.user.create({
         data: args.input,
       });
     },
 
     // Create a new hobby
-    createHobby: async (_: any, args: CreateHobbyArgs) => {
+    createHobby: async (_: unknown, args: CreateHobbyArgs) => {
       return await prisma.hobby.create({
         data: { hobby_name: args.name },
       });
