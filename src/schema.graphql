@@ -9,8 +9,11 @@ type Query {
 }
 
 type Mutation {
-  # User mutations
+  # Authentication mutations
   createUser(input: CreateUserInput!): User!
+  loginUser(input: LoginInput!): AuthPayload!
+
+  # User mutations
   updateUser(id: Int!, input: UpdateUserInput!): User!
   deleteUser(id: Int!): Boolean!
 
@@ -87,17 +90,25 @@ type ConversationMessage {
   sender: User!
 }
 
-# Input types for mutations
+# Authentication types
 input CreateUserInput {
   email: String!
+  password: String!
   firstname: String
   lastname: String
-  age: Int
-  gender: String
-  location: String
-  profile_description: String
 }
 
+input LoginInput {
+  email: String!
+  password: String!
+}
+
+type AuthPayload {
+  token: String!
+  user: User!
+}
+
+# Input types for mutations
 input UpdateUserInput {
   email: String
   firstname: String
