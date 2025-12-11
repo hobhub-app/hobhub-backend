@@ -1,5 +1,5 @@
-import { prisma } from "../config/prisma";
-import { UserArgs, CreateUserArgs } from "../types";
+import { prisma } from "../config/prisma.js";
+import { UserArgs } from "../types";
 
 export const userResolvers = {
   Query: {

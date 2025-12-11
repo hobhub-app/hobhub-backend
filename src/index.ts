@@ -4,7 +4,7 @@ import { prisma } from "./config/prisma.js";
 import { ApolloServer } from "@apollo/server";
 import { expressMiddleware } from "@as-integrations/express5";
 import { readFileSync } from "fs";
-import { resolvers } from "./resolvers";
+import { resolvers } from "./resolvers/index.js";
 
 const PORT: number = process.env.PORT ? parseInt(process.env.PORT) : 3000;
 const app: Express = express();
