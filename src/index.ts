@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Express } from "express";
 import cors from "cors";
 import { prisma } from "./config/prisma.js";
 import { ApolloServer } from "@apollo/server";
@@ -6,8 +6,8 @@ import { expressMiddleware } from "@as-integrations/express5";
 import { readFileSync } from "fs";
 import { resolvers } from "./resolvers.js";
 
-const PORT = process.env.PORT || 3000;
-const app = express();
+const PORT: number = process.env.PORT ? parseInt(process.env.PORT) : 3000;
+const app: Express = express();
 
 // Middleware
 app.use(cors());
