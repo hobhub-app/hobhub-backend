@@ -14,3 +14,10 @@ export interface CreateUserArgs {
 export interface CreateHobbyArgs {
   name: string;
 }
+
+export interface LoginInput {
+  input: {
+    email: string;
+    password: string;
+  };
+}
