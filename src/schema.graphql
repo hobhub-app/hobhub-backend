@@ -10,7 +10,7 @@ type Query {
 
 type Mutation {
   # Authentication mutations
-  createUser(input: CreateUserInput!): User!
+  registerUser(input: CreateUserInput!): AuthPayload!
   loginUser(input: LoginInput!): AuthPayload!
 
   # User mutations

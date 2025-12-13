@@ -1,5 +1,6 @@
 import { userResolvers } from "./user.js";
 import { hobbyResolvers } from "./hobby.js";
+import { authResolvers } from "./auth.js";
 
 export const resolvers = {
   Query: {
@@ -9,5 +10,6 @@ export const resolvers = {
   Mutation: {
     // ...userResolvers.Mutation,
     ...hobbyResolvers.Mutation,
+    ...authResolvers.Mutation,
   },
 };

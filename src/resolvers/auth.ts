@@ -9,27 +9,30 @@ export const authResolvers = {
     registerUser: async (_: unknown, args: CreateUserArgs) => {
       const { email, password, firstname, lastname } = args.input;
 
-      if (password.length < 8) {
+      if (!password || password.length < 8) {
+        throw new Error("Password must be at least 8 characters long");
+      }
+
+      try {
         const hashedPassword = await hashPassword(password);
-        try {
-          const user = await prisma.user.create({
-            data: {
-              email,
-              password: hashedPassword,
-              firstname,
-              lastname,
-            },
-          });
 
-          const token = generateToken(user.user_id, user.email);
+        const user = await prisma.user.create({
+          data: {
+            email,
+            password: hashedPassword,
+            firstname,
+            lastname,
+          },
+        });
 
-          return {
-            token,
-            user,
-          };
-        } catch {
-          throw new Error("Failed to register user");
-        }
+        const token = generateToken(user.user_id, user.email);
+
+        return {
+          token,
+          user,
+        };
+      } catch {
+        throw new Error("Failed to register user");
       }
     },
 
