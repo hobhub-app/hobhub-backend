@@ -1,6 +1,7 @@
 import { generateToken, hashPassword, verifyPassword } from "../auth/utils.js";
 import { prisma } from "../config/prisma.js";
 import { CreateUserArgs, LoginInput } from "../types";
+import { OAuth2Client } from "google-auth-library";
 
 export const authResolvers = {
   Query: {},
@@ -75,6 +76,54 @@ export const authResolvers = {
       } catch {
         throw new Error("Login failed");
       }
+    },
+
+    loginWithGoogle: async (_: unknown, { token }: { token: string }) => {
+      const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+
+      const ticket = await client.verifyIdToken({
+        idToken: token,
+        audience: process.env.GOOGLE_CLIENT_ID,
+      });
+      const payload = ticket.getPayload();
+      if (!payload) throw new Error("Invalid Google token");
+
+      const {
+        sub: google_id,
+        email,
+        given_name,
+        family_name,
+        picture,
+      } = payload;
+
+      if (!email) {
+        throw new Error("Google account did not return an email address.");
+      }
+
+      let user = await prisma.user.findUnique({ where: { google_id } });
+      if (!user && email) {
+        user = await prisma.user.findUnique({ where: { email } });
+      }
+
+      if (!user) {
+        user = await prisma.user.create({
+          data: {
+            google_id,
+            email,
+            firstname: given_name,
+            lastname: family_name,
+            profile_image_url: picture,
+            password: null,
+          },
+        });
+      }
+
+      const jwt = generateToken(user.user_id, user.email);
+
+      return {
+        token: jwt,
+        user,
+      };
     },
   },
 };

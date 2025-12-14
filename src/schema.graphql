@@ -13,6 +13,7 @@ type Mutation {
   # Authentication mutations
   registerUser(input: CreateUserInput!): AuthPayload!
   loginUser(input: LoginInput!): AuthPayload!
+  loginWithGoogle(token: String!): AuthPayload!
 
   # User mutations
   updateUser(id: Int!, input: UpdateUserInput!): User!
