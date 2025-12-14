@@ -5,6 +5,7 @@ import { ApolloServer } from "@apollo/server";
 import { expressMiddleware } from "@as-integrations/express5";
 import { readFileSync } from "fs";
 import { resolvers } from "./resolvers/index.js";
+import context from "./auth/context.js";
 
 const PORT: number = process.env.PORT ? parseInt(process.env.PORT) : 3000;
 const app: Express = express();
@@ -34,7 +35,7 @@ async function start() {
     console.log("Apollo Server started");
 
     // Add GraphQL endpoint
-    app.use("/graphql", expressMiddleware(server));
+    app.use("/graphql", expressMiddleware(server, { context }));
 
     // Start Express server
     app.listen(PORT, () => {
