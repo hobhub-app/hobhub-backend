@@ -37,6 +37,16 @@ async function start() {
     // Add GraphQL endpoint
     app.use("/graphql", expressMiddleware(server, { context }));
 
+    // Add Google Auth enpoint
+    app.get("/auth/google", (_, res) => {
+      res.send("Google OAuth endpoint placeholder");
+    });
+
+    // Add Google OAuth callback endpoint
+    app.get("/auth/google/callback", (_, res) => {
+      res.send("Google OAuth callback placeholder");
+    });
+
     // Start Express server
     app.listen(PORT, () => {
       console.log(`Server running on port ${PORT}`);
