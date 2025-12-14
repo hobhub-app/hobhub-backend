@@ -1,5 +1,5 @@
-import { AuthContext } from "./types";
-import { verifyToken } from "./utils";
+import { AuthContext } from "./types.js";
+import { verifyToken } from "./utils.js";
 
 const context = async ({
   req,

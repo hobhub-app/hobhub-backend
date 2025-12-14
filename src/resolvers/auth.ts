@@ -1,5 +1,5 @@
-import { generateToken, hashPassword, verifyPassword } from "../auth/utils";
-import { prisma } from "../config/prisma";
+import { generateToken, hashPassword, verifyPassword } from "../auth/utils.js";
+import { prisma } from "../config/prisma.js";
 import { CreateUserArgs, LoginInput } from "../types";
 
 export const authResolvers = {
