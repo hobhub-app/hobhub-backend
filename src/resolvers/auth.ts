@@ -103,6 +103,13 @@ export const authResolvers = {
       let user = await prisma.user.findUnique({ where: { google_id } });
       if (!user && email) {
         user = await prisma.user.findUnique({ where: { email } });
+
+        if (user && !user.google_id) {
+          user = await prisma.user.update({
+            where: { email },
+            data: { google_id },
+          });
+        }
       }
 
       if (!user) {
