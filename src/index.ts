@@ -1,11 +1,14 @@
 import express, { Express } from "express";
 import cors from "cors";
+import http from "http";
 import { prisma } from "./config/prisma.js";
 import { ApolloServer } from "@apollo/server";
 import { expressMiddleware } from "@as-integrations/express5";
 import { readFileSync } from "fs";
 import { resolvers } from "./resolvers/index.js";
 import context from "./auth/context.js";
+import { WebSocketServer } from "ws";
+import setupWebSocketHandlers from "./utils/websocket.js";
 
 const PORT: number = process.env.PORT ? parseInt(process.env.PORT) : 3000;
 const app: Express = express();
@@ -24,6 +27,9 @@ const server = new ApolloServer({
   resolvers,
 });
 
+const httpServer = http.createServer(app);
+const wss = new WebSocketServer({ server: httpServer });
+
 async function start() {
   try {
     // Connect to database
@@ -37,8 +43,11 @@ async function start() {
     // Add GraphQL endpoint
     app.use("/graphql", expressMiddleware(server, { context }));
 
-    // Start Express server
-    app.listen(PORT, () => {
+    // Set up WebSocket
+    setupWebSocketHandlers(wss);
+
+    // Shared HTTP server for Express, GraphQL and WebSockets
+    httpServer.listen(PORT, () => {
       console.log(`Server running on port ${PORT}`);
       console.log(
         `GraphQL endpoint available at http://localhost:${PORT}/graphql`
