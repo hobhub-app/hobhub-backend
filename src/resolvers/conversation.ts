@@ -1,5 +1,5 @@
 import { AuthContext } from "../auth/types";
-import { prisma } from "../config/prisma";
+import { prisma } from "../config/prisma.js";
 import {
   createMessage,
   getMessagesByConversation,
