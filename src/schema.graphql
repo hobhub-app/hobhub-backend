@@ -7,6 +7,10 @@ type Query {
   # Hobby queries
   hobby(id: Int!): Hobby
   hobbies: [Hobby!]!
+
+  # Conversation queries
+  myConversations: [Conversation!]!
+  conversationMessages(conversationId: Int!): [ConversationMessage!]!
 }
 
 type Mutation {
@@ -24,6 +28,9 @@ type Mutation {
 
   # User-Hobby relationship
   addUserHobby(userId: Int!, hobbyId: Int!, skillLevel: String): UserHobby!
+
+  # Conversation mutations
+  sendMessage(receiverId: Int!, content: String!): ConversationMessage!
 }
 
 type User {
