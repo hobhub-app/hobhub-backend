@@ -4,7 +4,7 @@ import {
   createMessage,
   getMessagesByConversation,
   getOrCreateConversation,
-} from "../services/conversationService";
+} from "../services/conversationService.js";
 import sendToUser from "../websocket/sendToUser.js";
 
 export const conversationResolvers = {
