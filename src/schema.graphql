@@ -34,67 +34,68 @@ type Mutation {
 }
 
 type User {
-  user_id: Int!
-  google_id: String
+  id: Int!
+  googleId: String
   email: String!
   firstname: String
   lastname: String
   age: Int
   gender: String
   location: String
-  profile_image_url: String
-  profile_description: String
-  created_at: String!
+  profileImageUrl: String
+  profileDescription: String
+  createdAt: String!
 
   # Relationships
   hobbies: [UserHobby!]!
-  saved_users: [SavedUser!]!
-  conversations_as_user1: [Conversation!]!
-  conversations_as_user2: [Conversation!]!
+  savedUsers: [SavedUser!]!
+  conversationsAsUser1: [Conversation!]!
+  conversationsAsUser2: [Conversation!]!
 }
 
 type Hobby {
-  hobby_id: Int!
-  hobby_name: String!
+  id: Int!
+  name: String!
   users: [UserHobby!]!
 }
 
 type UserHobby {
   id: Int!
-  user_id: Int!
-  hobby_id: Int!
-  skill_level: String
+  userId: Int!
+  hobbyId: Int!
+  skillLevel: String
   user: User!
   hobby: Hobby!
 }
 
 type SavedUser {
   id: Int!
-  user_id: Int!
-  saved_user_id: Int!
-  created_at: String!
+  userId: Int!
+  savedUserId: Int!
+  createdAt: String!
   user: User!
-  saved_user: User!
+  savedUser: User!
 }
 
+# Conversation and messages
 type Conversation {
-  conversation_id: Int!
-  user1_id: Int!
-  user2_id: Int!
-  created_at: String!
-  last_message_at: String
+  id: Int!
+  user1Id: Int!
+  user2Id: Int!
+  createdAt: String!
+  lastMessageAt: String
   user1: User!
   user2: User!
   messages: [ConversationMessage!]!
 }
 
 type ConversationMessage {
-  message_id: Int!
-  conversation_id: Int!
-  sender_id: Int!
+  id: Int!
+  conversationId: Int!
+  senderId: Int!
   content: String!
-  created_at: String!
-  read_at: String
+  createdAt: String!
+  readAt: String
   conversation: Conversation!
   sender: User!
 }
@@ -125,5 +126,5 @@ input UpdateUserInput {
   age: Int
   gender: String
   location: String
-  profile_description: String
+  profileDescription: String
 }
