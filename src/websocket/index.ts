@@ -1,5 +1,5 @@
 import { WebSocketServer } from "ws";
-import { verifyToken } from "../auth/utils";
+import { verifyToken } from "../auth/utils.js";
 import { connectedUsers } from "./connectedUsers";
 
 const setupWebSocketHandlers = (wss: WebSocketServer) => {
