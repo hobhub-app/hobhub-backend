@@ -5,6 +5,7 @@ import {
   getMessagesByConversation,
   getOrCreateConversation,
 } from "../services/conversationService";
+import sendToUser from "../websocket/sendToUser.js";
 
 export const conversationResolvers = {
   Query: {
@@ -63,7 +64,6 @@ export const conversationResolvers = {
       context: AuthContext
     ) => {
       const senderId = context.user?.userId;
-
       if (!senderId) {
         throw new Error("Not authenticated");
       }
@@ -78,7 +78,26 @@ export const conversationResolvers = {
         throw new Error("Access denied");
       }
 
-      return createMessage(conversation.conversation_id, senderId, content);
+      const message = await createMessage(
+        conversation.conversation_id,
+        senderId,
+        content
+      );
+
+      const actualReceiverId =
+        conversation.user1_id === senderId
+          ? conversation.user2_id
+          : conversation.user1_id;
+
+      sendToUser(actualReceiverId, {
+        type: "NEW_MESSAGE",
+        payload: {
+          conversationId: conversation.conversation_id,
+          message,
+        },
+      });
+
+      return message;
     },
   },
 };
