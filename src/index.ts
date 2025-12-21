@@ -8,7 +8,7 @@ import { readFileSync } from "fs";
 import { resolvers } from "./resolvers/index.js";
 import context from "./auth/context.js";
 import { WebSocketServer } from "ws";
-import setupWebSocketHandlers from "./utils/websocket.js";
+import setupWebSocketHandlers from "./websocket/index.js";
 
 const PORT: number = process.env.PORT ? parseInt(process.env.PORT) : 3000;
 const app: Express = express();
