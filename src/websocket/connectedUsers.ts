@@ -1,3 +1,5 @@
 import WebSocket from "ws";
 
-export const connectedUsers = new Map<number, Set<WebSocket>>();
+const connectedUsers = new Map<number, Set<WebSocket>>();
+
+export default connectedUsers;
