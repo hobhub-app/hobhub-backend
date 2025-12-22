@@ -72,16 +72,17 @@ model SavedUser {
 // CONVERSATIONS (2 users only)
 //
 model Conversation {
-  conversation_id Int      @id @default(autoincrement())
-  user1_id        Int
-  user2_id        Int
-  created_at      DateTime @default(now())
-  last_message_at DateTime?
+  conversation_id         Int      @id @default(autoincrement())
+  user1_id                Int
+  user2_id                Int
+  created_at              DateTime @default(now())
+  last_message_at         DateTime?
+  last_message_content    String?
 
-  user1           User @relation("User1", fields: [user1_id], references: [user_id])
-  user2           User @relation("User2", fields: [user2_id], references: [user_id])
+  user1                   User @relation("User1", fields: [user1_id], references: [user_id])
+  user2                   User @relation("User2", fields: [user2_id], references: [user_id])
 
-  messages        ConversationMessage[]
+  messages                ConversationMessage[]
 }
 
 //
