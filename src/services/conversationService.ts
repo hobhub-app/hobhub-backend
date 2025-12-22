@@ -45,7 +45,10 @@ export const createMessage = async (
 
   await prisma.conversation.update({
     where: { conversation_id: conversationId },
-    data: { last_message_at: new Date() },
+    data: {
+      last_message_at: new Date(),
+      last_message_content: content,
+    },
   });
 
   return message;

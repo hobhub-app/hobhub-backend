@@ -30,6 +30,7 @@ export const mappingResolvers = {
     user2Id: (parent: any) => parent.user2_id,
     createdAt: (parent: any) => parent.created_at,
     lastMessageAt: (parent: any) => parent.last_message_at,
+    lastMessageContent: (parent: any) => parent.last_message_content,
   },
 
   ConversationMessage: {

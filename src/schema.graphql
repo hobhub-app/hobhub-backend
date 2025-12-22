@@ -84,6 +84,7 @@ type Conversation {
   user2Id: Int!
   createdAt: String!
   lastMessageAt: String
+  lastMessageContent: String
   user1: User!
   user2: User!
   messages: [ConversationMessage!]!
