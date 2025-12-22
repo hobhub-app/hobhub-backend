@@ -24,6 +24,10 @@ export const conversationResolvers = {
         orderBy: {
           last_message_at: "desc",
         },
+        include: {
+          user1: true,
+          user2: true,
+        },
       });
     },
 
