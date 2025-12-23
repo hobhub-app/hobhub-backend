@@ -46,7 +46,7 @@ type User {
   location: String
   profileImageUrl: String
   profileDescription: String
-  createdAt: String!
+  createdAt: DateTime!
 
   # Relationships
   hobbies: [UserHobby!]!
@@ -74,7 +74,7 @@ type SavedUser {
   id: Int!
   userId: Int!
   savedUserId: Int!
-  createdAt: String!
+  createdAt: DateTime!
   user: User!
   savedUser: User!
 }
@@ -84,9 +84,9 @@ type Conversation {
   id: Int!
   user1Id: Int!
   user2Id: Int!
-  createdAt: String!
-  lastMessageAt: String
-  lastMessageContent: String
+  createdAt: DateTime!
+  lastMessageAt: DateTime!
+  lastMessageContent: String!
   user1: User!
   user2: User!
   messages: [ConversationMessage!]!
@@ -97,8 +97,8 @@ type ConversationMessage {
   conversationId: Int!
   senderId: Int!
   content: String!
-  createdAt: String!
-  readAt: String
+  createdAt: DateTime!
+  readAt: DateTime
   conversation: Conversation!
   sender: User!
 }
