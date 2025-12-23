@@ -1,9 +1,8 @@
 import { AuthContext } from "../auth/types";
 import { prisma } from "../config/prisma.js";
 import {
-  createMessage,
   getMessagesByConversation,
-  getOrCreateConversation,
+  sendMessageService,
 } from "../services/conversationService.js";
 import sendToUser from "../websocket/sendToUser.js";
 
@@ -72,19 +71,9 @@ export const conversationResolvers = {
         throw new Error("Not authenticated");
       }
 
-      const conversation = await getOrCreateConversation(senderId, receiverId);
-
-      const isParticipant =
-        conversation.user1_id === senderId ||
-        conversation.user2_id === senderId;
-
-      if (!isParticipant) {
-        throw new Error("Access denied");
-      }
-
-      const message = await createMessage(
-        conversation.conversation_id,
+      const { conversation, message } = await sendMessageService(
         senderId,
+        receiverId,
         content
       );
 

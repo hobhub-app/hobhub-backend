@@ -1,57 +1,55 @@
 import { prisma } from "../config/prisma.js";
 
-export const getOrCreateConversation = async (
-  userAId: number,
-  userBId: number
-) => {
-  const [user1_id, user2_id] =
-    userAId < userBId ? [userAId, userBId] : [userBId, userAId];
-
-  const existingConversation = await prisma.conversation.findFirst({
-    where: {
-      user1_id,
-      user2_id,
-    },
-  });
-
-  if (existingConversation) {
-    return existingConversation;
-  }
-
-  return prisma.conversation.create({
-    data: {
-      user1_id,
-      user2_id,
-    },
-  });
-};
-
-export const createMessage = async (
-  conversationId: number,
+export const sendMessageService = async (
   senderId: number,
+  receiverId: number,
   content: string
 ) => {
   if (!content.trim()) {
     throw new Error("Message content cannot be empty");
   }
 
-  const message = await prisma.conversationMessage.create({
-    data: {
-      conversation_id: conversationId,
-      sender_id: senderId,
-      content,
-    },
-  });
+  const [user1_id, user2_id] =
+    senderId < receiverId ? [senderId, receiverId] : [receiverId, senderId];
 
-  await prisma.conversation.update({
-    where: { conversation_id: conversationId },
-    data: {
-      last_message_at: new Date(),
-      last_message_content: content,
-    },
-  });
+  return prisma.$transaction(async (tx) => {
+    let conversation = await tx.conversation.findFirst({
+      where: { user1_id, user2_id },
+    });
 
-  return message;
+    if (!conversation) {
+      conversation = await tx.conversation.create({
+        data: {
+          user1_id,
+          user2_id,
+          last_message_at: new Date(),
+          last_message_content: content,
+        },
+      });
+    }
+
+    const message = await tx.conversationMessage.create({
+      data: {
+        conversation_id: conversation.conversation_id,
+        sender_id: senderId,
+        content,
+      },
+    });
+
+    const isExistingConversation = !!conversation.last_message_at;
+
+    if (isExistingConversation) {
+      await tx.conversation.update({
+        where: { conversation_id: conversation.conversation_id },
+        data: {
+          last_message_at: new Date(),
+          last_message_content: content,
+        },
+      });
+    }
+
+    return { conversation, message };
+  });
 };
 
 export const getMessagesByConversation = async (conversationId: number) => {
