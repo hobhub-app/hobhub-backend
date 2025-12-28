@@ -60,6 +60,14 @@ export const conversationResolvers = {
     },
   },
 
+  ConversationMessage: {
+    sender: async (parent: { sender_id: number }) => {
+      return prisma.user.findUnique({
+        where: { user_id: parent.sender_id },
+      });
+    },
+  },
+
   Mutation: {
     sendMessage: async (
       _: unknown,

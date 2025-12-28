@@ -1,3 +1,5 @@
+import { prisma } from "../config/prisma";
+
 export const mappingResolvers = {
   User: {
     id: (parent: any) => parent.user_id,
@@ -39,5 +41,17 @@ export const mappingResolvers = {
     senderId: (parent: any) => parent.sender_id,
     createdAt: (parent: any) => parent.created_at,
     readAt: (parent: any) => parent.read_at,
+
+    sender: async (parent: any) => {
+      const user = await prisma.user.findUnique({
+        where: { user_id: parent.sender_id },
+      });
+
+      if (!user) {
+        throw new Error(`User not found for sender_id ${parent.sender_id}`);
+      }
+
+      return user;
+    },
   },
 };
