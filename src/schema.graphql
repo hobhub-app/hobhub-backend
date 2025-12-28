@@ -12,6 +12,7 @@ type Query {
 
   # Conversation queries
   myConversations: [Conversation!]!
+  conversation(conversationId: Int!): Conversation!
   conversationMessages(conversationId: Int!): [ConversationMessage!]!
 }
 

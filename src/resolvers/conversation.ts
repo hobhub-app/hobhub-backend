@@ -1,6 +1,7 @@
 import { AuthContext } from "../auth/types";
 import { prisma } from "../config/prisma.js";
 import {
+  getConversationForUser,
   getMessagesByConversation,
   sendMessageService,
 } from "../services/conversationService.js";
@@ -30,32 +31,32 @@ export const conversationResolvers = {
       });
     },
 
+    conversation: async (
+      _: unknown,
+      { conversationId }: { conversationId: number },
+      context: AuthContext
+    ) => {
+      if (!context.isAuthenticated || !context.user?.userId) {
+        throw new Error("Not Authenticated");
+      }
+
+      const userId = context.user.userId;
+
+      return getConversationForUser(conversationId, userId);
+    },
+
     conversationMessages: async (
       _: unknown,
       { conversationId }: { conversationId: number },
       context: AuthContext
     ) => {
-      if (!context.isAuthenticated) {
+      if (!context.isAuthenticated || !context.user?.userId) {
         throw new Error("Not authenticated");
       }
 
       const userId = context.user?.userId;
 
-      const conversation = await prisma.conversation.findUnique({
-        where: { conversation_id: conversationId },
-      });
-
-      if (!conversation) {
-        throw new Error("Conversation not found");
-      }
-
-      const isParticipant =
-        conversation.user1_id === userId || conversation.user2_id === userId;
-
-      if (!isParticipant) {
-        throw new Error("Access denied");
-      }
-
+      await getConversationForUser(conversationId, userId);
       return getMessagesByConversation(conversationId);
     },
   },
