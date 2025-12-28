@@ -1,5 +1,27 @@
 import { prisma } from "../config/prisma.js";
 
+export const getConversationForUser = async (
+  conversationId: number,
+  userId: number
+) => {
+  const conversation = await prisma.conversation.findUnique({
+    where: { conversation_id: conversationId },
+  });
+
+  if (!conversation) {
+    throw new Error("Conversation not found");
+  }
+
+  const isParticipant =
+    conversation.user1_id === userId || conversation.user2_id === userId;
+
+  if (!isParticipant) {
+    throw new Error("Access denied");
+  }
+
+  return conversation;
+};
+
 export const sendMessageService = async (
   senderId: number,
   receiverId: number,
