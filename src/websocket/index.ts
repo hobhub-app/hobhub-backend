@@ -5,7 +5,12 @@ import connectedUsers from "./connectedUsers.js";
 const setupWebSocketHandlers = (wss: WebSocketServer) => {
   // WebSocket connection handler
   wss.on("connection", (ws, request) => {
-    const url = new URL(request.url ?? "", "http://localhost");
+    if (!request.url) {
+      ws.close();
+      return;
+    }
+
+    const url = new URL(request.url, "http://ws");
     const token = url.searchParams.get("token");
 
     if (!token) {
