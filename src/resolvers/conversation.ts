@@ -87,7 +87,17 @@ export const conversationResolvers = {
         type: "NEW_MESSAGE",
         payload: {
           conversationId: conversation.conversation_id,
-          message,
+          message: {
+            id: message.message_id,
+            senderId: message.sender_id,
+            content: message.content,
+            createdAt: message.created_at,
+            sender: {
+              id: message.sender.user_id,
+              firstname: message.sender.firstname,
+              lastname: message.sender.lastname,
+            },
+          },
         },
       });
 

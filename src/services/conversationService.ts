@@ -56,6 +56,15 @@ export const sendMessageService = async (
         sender_id: senderId,
         content,
       },
+      include: {
+        sender: {
+          select: {
+            user_id: true,
+            firstname: true,
+            lastname: true,
+          },
+        },
+      },
     });
 
     const isExistingConversation = !!conversation.last_message_at;
