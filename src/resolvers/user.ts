@@ -9,7 +9,15 @@ export const userResolvers = {
       if (!context.isAuthenticated) {
         throw new Error("Not authenticated");
       }
-      return await prisma.user.findMany();
+      return await prisma.user.findMany({
+        include: {
+          hobbies: {
+            include: {
+              hobby: true,
+            },
+          },
+        },
+      });
     },
 
     // Get single user by ID
