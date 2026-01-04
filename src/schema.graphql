@@ -4,7 +4,7 @@ type Query {
   # User queries
   me: User
   user(id: Int!): User
-  users: [User!]!
+  browseUsers: [User!]!
 
   # Hobby queries
   hobby(id: Int!): Hobby
