@@ -153,3 +153,14 @@ input UpdateUserInput {
   location: String
   profileDescription: String
 }
+
+type CloudinarySignature {
+  timestamp: Int!
+  signature: String!
+  cloudName: String!
+  apiKey: String!
+}
+
+extend type Mutation {
+  getUploadSignature: CloudinarySignature!
+}

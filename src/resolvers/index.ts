@@ -4,6 +4,7 @@ import { authResolvers } from "./auth.js";
 import { conversationResolvers } from "./conversation.js";
 import { mappingResolvers } from "./mappings.js";
 import { GraphQLDateTime } from "graphql-scalars";
+import { uploadResolvers } from "./upload.js";
 
 export const resolvers = {
   DateTime: GraphQLDateTime,
@@ -17,6 +18,7 @@ export const resolvers = {
     ...hobbyResolvers.Mutation,
     ...authResolvers.Mutation,
     ...conversationResolvers.Mutation,
+    ...uploadResolvers.Mutation,
   },
 
   ...mappingResolvers,
