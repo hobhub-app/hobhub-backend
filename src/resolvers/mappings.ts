@@ -4,6 +4,12 @@ export const mappingResolvers = {
   User: {
     id: (parent: any) => parent.user_id,
     googleId: (parent: any) => parent.google_id,
+    dateOfBirth: (parent: any) => parent.date_of_birth,
+    age: (parent: any) => {
+      if (!parent.date_of_birth) return null;
+      const diff = Date.now() - new Date(parent.date_of_birth).getTime();
+      return Math.floor(diff / (1000 * 60 * 60 * 24 * 365.25));
+    },
     profileImageUrl: (parent: any) => parent.profile_image_url,
     profileDescription: (parent: any) => parent.profile_description,
     createdAt: (parent: any) => parent.created_at,

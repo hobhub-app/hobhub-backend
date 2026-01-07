@@ -21,3 +21,17 @@ export interface LoginInput {
     password: string;
   };
 }
+
+export interface UserHobbyInput {
+  hobbyId: number;
+  skillLevel?: string;
+}
+
+export interface CompleteOnboardingInput {
+  dateOfBirth: Date;
+  location: string;
+  gender?: string;
+  profileDescription?: string;
+  profileImageUrl?: string;
+  hobbies: UserHobbyInput[];
+}

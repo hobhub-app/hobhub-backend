@@ -1,6 +1,7 @@
+import { Prisma } from "@prisma/client";
 import { AuthContext } from "../auth/types.js";
 import { prisma } from "../config/prisma.js";
-import { UserArgs } from "../types";
+import { UserArgs, CompleteOnboardingInput } from "../types";
 import rankUsers from "../utils/rankUsers.js";
 
 export const userResolvers = {
@@ -75,6 +76,55 @@ export const userResolvers = {
             },
           },
         },
+      });
+    },
+  },
+  Mutation: {
+    completeOnboarding: async (
+      _: unknown,
+      { input }: { input: CompleteOnboardingInput },
+      context: AuthContext
+    ) => {
+      const userId = context.user?.userId;
+
+      if (!context.isAuthenticated || !userId) {
+        throw new Error("Not authenticated");
+      }
+
+      if (!input.hobbies.length) {
+        throw new Error("At least one hobby is required");
+      }
+
+      return prisma.$transaction(async (tx) => {
+        await tx.user.update({
+          where: { user_id: userId },
+          data: {
+            date_of_birth: input.dateOfBirth,
+            location: input.location,
+            gender: input.gender,
+            profile_description: input.profileDescription,
+            profile_image_url: input.profileImageUrl,
+          },
+        });
+
+        await tx.userHobby.deleteMany({
+          where: { user_id: userId },
+        });
+
+        await tx.userHobby.createMany({
+          data: input.hobbies.map(({ hobbyId, skillLevel }) => ({
+            user_id: userId,
+            hobby_id: hobbyId,
+            skill_level: skillLevel,
+          })),
+        });
+
+        return tx.user.findUnique({
+          where: { user_id: userId },
+          include: {
+            hobbies: { include: { hobby: true } },
+          },
+        });
       });
     },
   },

@@ -23,6 +23,7 @@ type Mutation {
   loginWithGoogle(token: String!): AuthPayload!
 
   # User mutations
+  completeOnboarding(input: CompleteOnboardingInput!): User!
   updateUser(id: Int!, input: UpdateUserInput!): User!
   deleteUser(id: Int!): Boolean!
 
@@ -42,6 +43,7 @@ type User {
   email: String!
   firstname: String
   lastname: String
+  dateOfBirth: DateTime
   age: Int
   gender: String
   location: String
@@ -54,6 +56,15 @@ type User {
   savedUsers: [SavedUser!]!
   conversationsAsUser1: [Conversation!]!
   conversationsAsUser2: [Conversation!]!
+}
+
+input CompleteOnboardingInput {
+  dateOfBirth: DateTime!
+  location: String!
+  gender: String
+  profileDescription: String
+  profileImageUrl: String
+  hobbies: [UserHobbyInput!]!
 }
 
 type Hobby {
@@ -69,6 +80,11 @@ type UserHobby {
   skillLevel: String
   user: User!
   hobby: Hobby!
+}
+
+input UserHobbyInput {
+  hobbyId: Int!
+  skillLevel: String
 }
 
 type SavedUser {
@@ -132,7 +148,7 @@ input UpdateUserInput {
   email: String
   firstname: String
   lastname: String
-  age: Int
+  dateOfBirth: DateTime
   gender: String
   location: String
   profileDescription: String

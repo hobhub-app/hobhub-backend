@@ -13,7 +13,7 @@ export const resolvers = {
     ...conversationResolvers.Query,
   },
   Mutation: {
-    // ...userResolvers.Mutation,
+    ...userResolvers.Mutation,
     ...hobbyResolvers.Mutation,
     ...authResolvers.Mutation,
     ...conversationResolvers.Mutation,
