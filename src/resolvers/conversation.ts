@@ -101,7 +101,10 @@ export const conversationResolvers = {
         },
       });
 
-      return message;
+      return {
+        conversationId: conversation.conversation_id,
+        message,
+      };
     },
   },
 };

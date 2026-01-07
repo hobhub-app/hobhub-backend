@@ -33,7 +33,7 @@ type Mutation {
   addUserHobby(userId: Int!, hobbyId: Int!, skillLevel: String): UserHobby!
 
   # Conversation mutations
-  sendMessage(receiverId: Int!, content: String!): ConversationMessage!
+  sendMessage(receiverId: Int!, content: String!): SendMessageResult!
 }
 
 type User {
@@ -102,6 +102,11 @@ type ConversationMessage {
   readAt: DateTime
   conversation: Conversation!
   sender: User!
+}
+
+type SendMessageResult {
+  conversationId: Int!
+  message: ConversationMessage!
 }
 
 # Authentication types
