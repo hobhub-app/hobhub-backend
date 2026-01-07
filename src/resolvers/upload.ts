@@ -1,5 +1,5 @@
 import { AuthContext } from "../auth/types";
-import cloudinary from "../config/cloudinary";
+import cloudinary from "../config/cloudinary.js";
 
 export const uploadResolvers = {
   Mutation: {
