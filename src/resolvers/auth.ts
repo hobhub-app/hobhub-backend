@@ -14,27 +14,23 @@ export const authResolvers = {
         throw new Error("Password must be at least 8 characters long");
       }
 
-      try {
-        const hashedPassword = await hashPassword(password);
+      const hashedPassword = await hashPassword(password);
 
-        const user = await prisma.user.create({
-          data: {
-            email,
-            password: hashedPassword,
-            firstname,
-            lastname,
-          },
-        });
+      const user = await prisma.user.create({
+        data: {
+          email,
+          password: hashedPassword,
+          firstname,
+          lastname,
+        },
+      });
 
-        const token = generateToken(user.user_id, user.email);
+      const token = generateToken(user.user_id, user.email);
 
-        return {
-          token,
-          user,
-        };
-      } catch {
-        throw new Error("Failed to register user");
-      }
+      return {
+        token,
+        user,
+      };
     },
 
     loginUser: async (_: unknown, args: LoginInput) => {
@@ -44,38 +40,31 @@ export const authResolvers = {
         throw new Error("Invalid credentials");
       }
 
-      try {
-        const user = await prisma.user.findUnique({
-          where: { email: email },
-        });
+      const user = await prisma.user.findUnique({
+        where: { email: email },
+      });
 
-        // User not found
-        if (!user) {
-          throw new Error("Invalid credentials");
-        }
-
-        // No password set
-        if (!user?.password) {
-          throw new Error(
-            "No password set for this account. Please log in with Google."
-          );
-        }
-
-        const isMatch = await verifyPassword(password, user.password);
-
-        // Check password
-        if (!isMatch) {
-          throw new Error("Invalid credentials");
-        }
-
-        const token = generateToken(user.user_id, user.email);
-        return {
-          token,
-          user,
-        };
-      } catch {
-        throw new Error("Login failed");
+      if (!user) {
+        throw new Error("Invalid credentials");
       }
+
+      if (!user.password) {
+        throw new Error(
+          "No password set for this account. Please log in with Google."
+        );
+      }
+
+      const isMatch = await verifyPassword(password, user.password);
+
+      if (!isMatch) {
+        throw new Error("Invalid credentials");
+      }
+
+      const token = generateToken(user.user_id, user.email);
+      return {
+        token,
+        user,
+      };
     },
 
     loginWithGoogle: async (_: unknown, { token }: { token: string }) => {
